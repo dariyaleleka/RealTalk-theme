@@ -1,1 +1,442 @@
-"use strict";function _typeof(e){return(_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}window.addEventListener("load",function(){document.querySelector("body").classList.add("loaded")});var Stats=function e(){function t(e){return r.appendChild(e.dom),e}function n(e){for(var t=0;t<r.children.length;t++)r.children[t].style.display=t===e?"block":"none";o=e}var o=0,r=document.createElement("div");r.style.cssText="position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000",r.addEventListener("click",function(e){e.preventDefault(),n(++o%r.children.length)},!1);var i=(performance||Date).now(),a=i,l=0,c=t(new e.Panel("FPS","#0ff","#002")),d=t(new e.Panel("MS","#0f0","#020"));if(self.performance&&self.performance.memory)var s=t(new e.Panel("MB","#f08","#201"));return n(0),{REVISION:16,dom:r,addPanel:t,showPanel:n,begin:function(){i=(performance||Date).now()},end:function(){l++;var e=(performance||Date).now();if(d.update(e-i,200),a+1e3<e&&(c.update(1e3*l/(e-a),100),a=e,l=0,s)){var t=performance.memory;s.update(t.usedJSHeapSize/1048576,t.jsHeapSizeLimit/1048576)}return e},update:function(){i=this.end()},domElement:r,setMode:n}};Stats.Panel=function(n,o,r){var i=1/0,a=0,l=Math.round,c=l(window.devicePixelRatio||1),d=80*c,e=48*c,s=3*c,u=2*c,m=3*c,f=15*c,y=74*c,p=30*c,h=document.createElement("canvas");h.width=d,h.height=e,h.style.cssText="width:80px;height:48px";var w=h.getContext("2d");return w.font="bold "+9*c+"px Helvetica,Arial,sans-serif",w.textBaseline="top",w.fillStyle=r,w.fillRect(0,0,d,e),w.fillStyle=o,w.fillText(n,s,u),w.fillRect(m,f,y,p),w.fillStyle=r,w.globalAlpha=.9,w.fillRect(m,f,y,p),{dom:h,update:function(e,t){i=Math.min(i,e),a=Math.max(a,e),w.fillStyle=r,w.globalAlpha=1,w.fillRect(0,0,d,f),w.fillStyle=o,w.fillText(l(e)+" "+n+" ("+l(i)+"-"+l(a)+")",s,u),w.drawImage(h,m+c,f,y-c,p,m,f,y-c,p),w.fillRect(m+y-c,f,c,p),w.fillStyle=r,w.globalAlpha=.9,w.fillRect(m+y-c,f,c,l((1-e/t)*p))}}},"object"===("undefined"==typeof module?"undefined":_typeof(module))&&(module.exports=Stats);var WEBGL={isWebGLAvailable:function(){try{var e=document.createElement("canvas");return!(!window.WebGLRenderingContext||!e.getContext("webgl")&&!e.getContext("experimental-webgl"))}catch(e){return!1}},isWebGL2Available:function(){try{var e=document.createElement("canvas");return!(!window.WebGL2RenderingContext||!e.getContext("webgl2"))}catch(e){return!1}},getWebGLErrorMessage:function(){return this.getErrorMessage(1)},getWebGL2ErrorMessage:function(){return this.getErrorMessage(2)},getErrorMessage:function(e){var t={1:window.WebGLRenderingContext,2:window.WebGL2RenderingContext},n='Your $0 does not seem to support <a href="http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation" style="color:#000">$1</a>',o=document.createElement("div");return o.id="webglmessage",o.style.fontFamily="monospace",o.style.fontSize="13px",o.style.fontWeight="normal",o.style.textAlign="center",o.style.background="#fff",o.style.color="#000",o.style.padding="1.5em",o.style.width="400px",o.style.margin="5em auto 0",n=(n=t[e]?n.replace("$0","graphics card"):n.replace("$0","browser")).replace("$1",{1:"WebGL",2:"WebGL 2"}[e]),o.innerHTML=n,o}};!1===WEBGL.isWebGLAvailable()&&document.body.appendChild(WEBGL.getWebGLErrorMessage());var camera,scene,renderer,SCREEN_WIDTH=document.documentElement.clientWidth,SCREEN_HEIGHT=window.innerHeight,r=450,mouseY=0,windowHalfY=window.innerHeight/2;function init(){(camera=new THREE.PerspectiveCamera(80,SCREEN_WIDTH/SCREEN_HEIGHT,1,3e3)).position.z=1e3,scene=new THREE.Scene;var e,t,n,o,r=[[.1,8979922,.1],[.1,6441454,.1],[.1,9126125,.1],[.1,4615661,.1],[.1,7368946,.1],[.1,2821333,.1],[.1,7368946,.1],[.1,2183142,.1],[.1,6228179,.1]],i=createGeometry();for(e=0;e<r.length;++e)o=r[e],n=new THREE.LineBasicMaterial({color:o[1],opacity:o[2]}),(t=new THREE.LineSegments(i,n)).scale.x=t.scale.y=t.scale.z=o[0]++,t.userData.originalScale=o[0],t.rotation.y=Math.random()*Math.PI,t.updateMatrix(),scene.add(t);(renderer=new THREE.WebGLRenderer({antialias:!0})).setPixelRatio(window.devicePixelRatio),renderer.setSize(SCREEN_WIDTH,576<SCREEN_WIDTH?SCREEN_HEIGHT<750?750:SCREEN_HEIGHT:SCREEN_HEIGHT<450?450:SCREEN_HEIGHT),document.getElementById("animation-screen").appendChild(renderer.domElement),document.addEventListener("mousemove",onDocumentMouseMove,!1),document.addEventListener("touchstart",onDocumentTouchStart,!1),document.addEventListener("touchmove",onDocumentTouchMove,!0),window.addEventListener("resize",onWindowResize,!1),setInterval(function(){var t=createGeometry();scene.traverse(function(e){e.isLine&&(e.geometry.dispose(),e.geometry=t)})},1e5)}function createGeometry(){for(var e=new THREE.BufferGeometry,t=[],n=new THREE.Vector3,o=0;o<1500;o++)n.x=2*Math.random()-1,n.y=2*Math.random()-1,n.z=2*Math.random()-1,n.normalize(),n.multiplyScalar(r),t.push(n.x,n.y,n.z),n.multiplyScalar(.01*Math.random()+1),t.push(n.x,n.y,n.z);return e.addAttribute("position",new THREE.Float32BufferAttribute(t,3)),e}function onWindowResize(){windowHalfY=window.innerHeight/2,camera.aspect=window.innerWidth/window.innerHeight,camera.updateProjectionMatrix(),renderer.setSize(document.documentElement.clientWidth,576<window.innerWidth?window.innerHeight<750?750:window.innerHeight:window.innerHeight<450?450:window.innerHeight)}function onDocumentMouseMove(e){mouseY=e.clientY-windowHalfY}function onDocumentTouchStart(e){1<e.touches.length&&(e.preventDefault(),mouseY=e.touches[0].pageY-windowHalfY)}function onDocumentTouchMove(e){1==e.touches.length&&(mouseY=e.touches[0].pageY-windowHalfY,console.log(e.touches[0].pageY))}function animate(){requestAnimationFrame(animate),render()}init(),animate();var rpmY=7,rpmX=2;function render(){renderer.render(scene,camera);for(var e=5e-5*Date.now(),t=0;t<scene.children.length;t+=1){var n=scene.children[t];if(n.isLine&&(n.rotation.y=rpmY*(e*(t<4?t+1:-(t+1))),n.rotation.x=rpmX*(e*(t<4?t+1:-(t+1))),t<9)){var o=n.userData.originalScale*(t/5+.1)*(1+20*Math.sin(2*e));n.scale.x=n.scale.y=n.scale.z=o}}}if(document.documentElement.clientWidth<576){var accordeon=function(){var t=document.querySelectorAll(".row2"),r=document.querySelectorAll(".services-block__item"),i=null;r.forEach(function(n,o){t[o].style.display="none",n.addEventListener("click",function(e){r.forEach(function(e,t){e!==n&&(r[t].style.filter="grayscale(1)"),i===o&&(r[t].style.filter="unset")}),r[o].style.filter="unset",t[o].style.display="block",t[o].style.height="300px",t[o].style.opacity="1",console.log(r[o]),null!==i&&(t[i].style.display="none",console.log(i)),i=i==o?null:o})})};document.addEventListener("DOMContentLoaded",accordeon)}else{var _accordeon=function(){var t=document.querySelectorAll(".row1"),r=document.querySelectorAll(".services-block__item"),i=document.querySelector(".services-block__about"),a=null;r.forEach(function(n,o){t[o].style.display="none",n.addEventListener("click",function(e){r.forEach(function(e,t){e!==n&&(r[t].style.filter="grayscale(1)"),a===o&&(r[t].style.filter="unset")}),r[o].style.filter="unset",t[o].style.display="block",t[o].style.height="300px",t[o].style.opacity="1",console.log(r[o]),i.style.display="none",console.log(i),null!=a&&(t[a].style.display="none",i.style.display="block"),a=a==o?null:o})})};document.addEventListener("DOMContentLoaded",_accordeon)}var anchors=document.querySelectorAll('a[href*="#"]'),_iteratorNormalCompletion=!0,_didIteratorError=!1,_iteratorError=void 0;try{for(var _step,_loop=function(){var n=_step.value;n.addEventListener("click",function(e){e.preventDefault();var t=n.getAttribute("href").substr(1);document.getElementById(t).scrollIntoView({behavior:"smooth",block:"start"})})},_iterator=anchors[Symbol.iterator]();!(_iteratorNormalCompletion=(_step=_iterator.next()).done);_iteratorNormalCompletion=!0)_loop()}catch(e){_didIteratorError=!0,_iteratorError=e}finally{try{_iteratorNormalCompletion||null==_iterator.return||_iterator.return()}finally{if(_didIteratorError)throw _iteratorError}}window.onload=function(){var e,t;function n(){0<e?(window.scrollTo(0,e),e-=100,t=setTimeout(n,100)):(clearTimeout(t),window.scrollTo(0,0))}document.getElementById("top").onclick=function(){e=window.pageYOffset,n()}};
+/**
+ * Preloader
+ */
+window.addEventListener('load', function() {
+    document.querySelector('body').classList.add('loaded');
+});
+//stats.js - http://github.com/mrdoob/stats.js
+var Stats = function () {
+    function h(a) {
+        c.appendChild(a.dom);
+        return a
+    }
+
+    function k(a) {
+        for (var d = 0; d < c.children.length; d++) c.children[d].style.display = d === a ? "block" : "none";
+        l = a
+    }
+
+    var l = 0, c = document.createElement("div");
+    c.style.cssText = "position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";
+    c.addEventListener("click", function (a) {
+        a.preventDefault();
+        k(++l % c.children.length)
+    }, !1);
+    var g = (performance || Date).now(), e = g, a = 0, r = h(new Stats.Panel("FPS", "#0ff", "#002")),
+        f = h(new Stats.Panel("MS", "#0f0", "#020"));
+    if (self.performance && self.performance.memory) var t = h(new Stats.Panel("MB", "#f08", "#201"));
+    k(0);
+    return {
+        REVISION: 16, dom: c, addPanel: h, showPanel: k, begin: function () {
+            g = (performance || Date).now()
+        }, end: function () {
+            a++;
+            var c = (performance || Date).now();
+            f.update(c - g, 200);
+            if (c > e + 1E3 && (r.update(1E3 * a / (c - e), 100), e = c, a = 0, t)) {
+                var d = performance.memory;
+                t.update(d.usedJSHeapSize / 1048576, d.jsHeapSizeLimit / 1048576)
+            }
+            return c
+        }, update: function () {
+            g = this.end()
+        }, domElement: c, setMode: k
+    }
+};
+Stats.Panel = function (h, k, l) {
+    var c = Infinity, g = 0, e = Math.round, a = e(window.devicePixelRatio || 1), r = 80 * a, f = 48 * a, t = 3 * a,
+        u = 2 * a, d = 3 * a, m = 15 * a, n = 74 * a, p = 30 * a, q = document.createElement("canvas");
+    q.width = r;
+    q.height = f;
+    q.style.cssText = "width:80px;height:48px";
+    var b = q.getContext("2d");
+    b.font = "bold " + 9 * a + "px Helvetica,Arial,sans-serif";
+    b.textBaseline = "top";
+    b.fillStyle = l;
+    b.fillRect(0, 0, r, f);
+    b.fillStyle = k;
+    b.fillText(h, t, u);
+    b.fillRect(d, m, n, p);
+    b.fillStyle = l;
+    b.globalAlpha = .9;
+    b.fillRect(d, m, n, p);
+    return {
+        dom: q, update: function (f,
+                                  v) {
+            c = Math.min(c, f);
+            g = Math.max(g, f);
+            b.fillStyle = l;
+            b.globalAlpha = 1;
+            b.fillRect(0, 0, r, m);
+            b.fillStyle = k;
+            b.fillText(e(f) + " " + h + " (" + e(c) + "-" + e(g) + ")", t, u);
+            b.drawImage(q, d + a, m, n - a, p, d, m, n - a, p);
+            b.fillRect(d + n - a, m, a, p);
+            b.fillStyle = l;
+            b.globalAlpha = .9;
+            b.fillRect(d + n - a, m, a, e((1 - f / v) * p))
+        }
+    }
+};
+"object" === typeof module && (module.exports = Stats);
+// stats.min.js END
+//-----------------------------------------------------------
+// WebGL Begins
+var WEBGL = {
+    isWebGLAvailable: function () {
+        try {
+            var e = document.createElement("canvas");
+            return !(!window.WebGLRenderingContext || !e.getContext("webgl") && !e.getContext("experimental-webgl"))
+        } catch (e) {
+            return !1
+        }
+    }, isWebGL2Available: function () {
+        try {
+            var e = document.createElement("canvas");
+            return !(!window.WebGL2RenderingContext || !e.getContext("webgl2"))
+        } catch (e) {
+            return !1
+        }
+    }, getWebGLErrorMessage: function () {
+        return this.getErrorMessage(1)
+    }, getWebGL2ErrorMessage: function () {
+        return this.getErrorMessage(2)
+    }, getErrorMessage: function (e) {
+        var t = {1: window.WebGLRenderingContext, 2: window.WebGL2RenderingContext},
+            n = 'Your $0 does not seem to support <a href="http://khronos.org/webgl/wiki/Getting_a_WebGL_Implementation" style="color:#000">$1</a>',
+            r = document.createElement("div");
+        return r.id = "webglmessage", r.style.fontFamily = "monospace", r.style.fontSize = "13px", r.style.fontWeight = "normal", r.style.textAlign = "center", r.style.background = "#fff", r.style.color = "#000", r.style.padding = "1.5em", r.style.width = "400px", r.style.margin = "5em auto 0", n = (n = t[e] ? n.replace("$0", "graphics card") : n.replace("$0", "browser")).replace("$1", {
+            1: "WebGL",
+            2: "WebGL 2"
+        }[e]), r.innerHTML = n, r
+    }
+};
+// WebGL.js END
+//----------------------------------------------------
+// My Code
+
+if (WEBGL.isWebGLAvailable() === false) {
+    document.body.appendChild(WEBGL.getWebGLErrorMessage());
+}
+
+var SCREEN_WIDTH = document.documentElement.clientWidth,
+    SCREEN_HEIGHT = window.innerHeight,
+    r = 450,
+    mouseY = 0,
+    windowHalfY = window.innerHeight / 2,
+    camera, scene, renderer;
+
+
+init();
+animate();
+
+function init() {
+    camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
+    camera.position.z = 1000;
+
+    scene = new THREE.Scene();
+
+    var i, line, material, p,
+        parameters = [
+            [0.1, 0x8905D2, 0.1],
+            [0.1, 0x6249EE, 0.1],
+            [0.1, 0x8B40ED, 0.1],
+            [0.1, 0x466DED, 0.1],
+            [0.1, 0x7070F2, 0.1],
+            [0.1, 0x2B0CD5, 0.1],
+            [0.1, 0x7070F2, 0.1],
+            [0.1, 0x214FE6, 0.1],
+            [0.1, 0x5F08D3, 0.1]
+        ];
+
+    var geometry = createGeometry();
+
+    for (i = 0; i < parameters.length; ++i) {
+
+        p = parameters[i];
+
+        material = new THREE.LineBasicMaterial({
+            color: p[1],
+            opacity: p[2]
+        });
+
+        line = new THREE.LineSegments(geometry, material);
+        line.scale.x = line.scale.y = line.scale.z = p[0]++;
+        line.userData.originalScale = p[0];
+        line.rotation.y = Math.random() * Math.PI;
+        line.updateMatrix();
+        scene.add(line);
+    }
+
+    // renderer = new THREE.WebGLRenderer({
+    //   antialias: true
+    // });
+
+    (renderer = new THREE.WebGLRenderer({antialias: !0})).setPixelRatio(window.devicePixelRatio),
+        renderer.setSize(SCREEN_WIDTH, SCREEN_WIDTH>576? SCREEN_HEIGHT<750?750:SCREEN_HEIGHT : SCREEN_HEIGHT<450?450:SCREEN_HEIGHT);
+
+
+    // renderer.setPixelRatio(window.devicePixelRatio);
+    // renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    let animation = document.getElementById('animation-screen');
+    // document.body.appendChild(renderer.domElement);
+    animation.appendChild(renderer.domElement);
+
+    //console.log(renderer.domElement);
+
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    document.addEventListener('touchstart', onDocumentTouchStart, false);
+    document.addEventListener('touchmove', onDocumentTouchMove, true);
+    window.addEventListener('resize', onWindowResize, false);
+
+
+    // test geometry swapability
+    setInterval(function () {
+        var geometry = createGeometry();
+        scene.traverse(function (object) {
+
+            if (object.isLine) {
+                object.geometry.dispose();
+                object.geometry = geometry;
+            }
+        });
+    }, 100000); // This was making the code go stuck
+}
+
+function createGeometry() {
+
+    var geometry = new THREE.BufferGeometry();
+    var vertices = [];
+
+    var vertex = new THREE.Vector3();
+
+    for (var i = 0; i < 1500; i++) {
+
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.normalize();
+        vertex.multiplyScalar(r);
+
+        vertices.push(vertex.x, vertex.y, vertex.z);
+
+        vertex.multiplyScalar(Math.random() * 0.01 + 1);
+
+        vertices.push(vertex.x, vertex.y, vertex.z);
+    }
+    geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+    return geometry;
+}
+
+function onWindowResize() {
+    windowHalfY = window.innerHeight / 2, camera.aspect = window.innerWidth / window.innerHeight, camera.updateProjectionMatrix(), renderer.setSize(document.documentElement.clientWidth, window.innerWidth>576? window.innerHeight<750?750:window.innerHeight : window.innerHeight<450?450:window.innerHeight)
+
+}
+
+function onDocumentMouseMove(event) {
+    mouseY = event.clientY - windowHalfY;
+}
+
+function onDocumentTouchStart(event) {
+    if (event.touches.length > 1) {
+        event.preventDefault();
+        mouseY = event.touches[0].pageY - windowHalfY;
+    }
+}
+
+function onDocumentTouchMove(event) {
+    if (event.touches.length == 1) {
+        //event.preventDefault();
+        mouseY = event.touches[0].pageY - windowHalfY;
+        console.log(event.touches[0].pageY)
+    }
+}
+
+//
+function animate() {
+
+    requestAnimationFrame(animate);
+
+    render();
+
+}
+
+//
+var rpmY = 7;
+var rpmX = 2;
+
+function render() {
+
+    renderer.render(scene, camera);
+
+    var time = Date.now() * 0.00005;
+
+    for (var i = 0; i < scene.children.length; i += 1) {
+        var object = scene.children[i];
+        if (object.isLine) {
+            object.rotation.y = rpmY * (time * (i < 4 ? (i + 1) : -(i + 1)));
+            object.rotation.x = rpmX * (time * (i < 4 ? (i + 1) : -(i + 1)));
+            if (i < 9) {
+                var scale = object.userData.originalScale * (i / 5 + 0.1) * (1 + 20 * Math.sin(2 * time));
+                object.scale.x = object.scale.y = object.scale.z = scale;
+            }
+        }
+    }
+};
+
+/**
+ * Function open services block
+ */
+
+if(document.documentElement.clientWidth < 992){
+    document.addEventListener("DOMContentLoaded", accordeonMobile);
+    function accordeonMobile() {
+        let accordBlocks = document.querySelectorAll('.row2'),
+            accordTitles = document.querySelectorAll('.services-block__item'),
+            index = null;
+        accordTitles.forEach((el,i)=>{
+            accordBlocks[i].style.display = 'none';
+            el.addEventListener('click', function(e){
+
+                accordTitles.forEach((elSek,y)=>{
+                    if(elSek !== el){
+                        accordTitles[y].style.filter = 'grayscale(1)';
+                    }
+                    if(index === i){
+                        accordTitles[y].style.filter = 'unset';
+                    }
+                });
+                accordTitles[i].style.filter = 'unset';
+                accordBlocks[i].style.display = 'block';
+                accordBlocks[i].style.height = '350px';
+                accordBlocks[i].style.opacity = '1';
+                console.log(accordTitles[i]);
+
+                if(index !== null){
+                    accordBlocks[index].style.display = 'none';
+                    //el.style.filter = 'unset';
+                    //accordTitles[index].style.opacity = '1';
+                    console.log(index);
+                    //accordTitles[index].style.filter = 'unset';
+                    //accordTitles[y].style.filter = 'grayscale(1)' ? 'grayscale(1)' : 'unset';
+                }
+                index = index==i? null: i;
+            });
+        });
+    }
+
+}else {
+    // desktop function
+    document.addEventListener("DOMContentLoaded", accordeon);
+    function accordeon() {
+        let accordBlocks = document.querySelectorAll('.row1'),
+            accordTitles = document.querySelectorAll('.services-block__item'),
+            blockAboutUs =  document.querySelector('.services-block__about'),
+            index = null;
+        accordTitles.forEach((el,i)=>{
+            accordBlocks[i].style.display = 'none';
+            el.addEventListener('click', function(e){
+
+                accordTitles.forEach((elSek,y)=>{
+                    if(elSek !== el){
+                        accordTitles[y].style.filter = 'grayscale(1)';
+                    }
+                    if(index === i){
+                        accordTitles[y].style.filter = 'unset';
+                    }
+                });
+
+                accordTitles[i].style.filter = 'unset';
+                accordBlocks[i].style.display = 'block';
+                accordBlocks[i].style.height = '388px';
+                accordBlocks[i].style.opacity = '1';
+                console.log(accordTitles[i]);
+                blockAboutUs.style.display = 'none';
+                console.log(blockAboutUs);
+
+                if(index != null){
+                    accordBlocks[index].style.display = 'none';
+                    blockAboutUs.style.display = 'block';
+                    //accordTitles[index].style.filter = 'unset';
+                }
+                index = index==i? null: i;
+            });
+        });
+    }
+}
+
+
+/**
+ * Scroll to anchor
+ */
+const anchors = document.querySelectorAll('a[href*="#"]')
+for (let anchor of anchors) {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault()
+
+        const blockID = anchor.getAttribute('href').substr(1)
+
+        document.getElementById(blockID).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        })
+    })
+}
+
+/**
+ * Scroll to top
+ */
+// window.onload = function () {
+//     //window.scrollTo(x,y)
+//     let scrolled;
+//     let timer;
+
+//     document.getElementById('top').onclick = function() {
+//         scrolled = window.pageYOffset;
+//         //window.scrollTo(0,0);
+//         scrollToTop();
+//     };
+//     function scrollToTop() {
+//         if(scrolled > 0){
+//             window.scrollTo(0, scrolled);
+//             scrolled = scrolled - 100;
+//             timer = setTimeout(scrollToTop, 100);
+//         }
+//         else {
+//             clearTimeout(timer);
+//             window.scrollTo(0,0);
+//         }
+//     }
+// };
+
+/**
+ * Popup
+ */
+var button = $('#button');
+
+button.on('click', (element) => {
+    element.preventDefault();
+    $('#popup-1').delay(1000).fadeIn();
+
+    $('.button-popup').click(function(e)
+        {
+            $('#popup-1').delay(4000).fadeOut(); // Now the pop up is hiden.
+        });
+//     $('.overlay').click(function(e)
+//     {
+//         $('#popup').fadeOut();
+//     });
+});
+$(document).mouseup(function (e) {
+    var popup = $('.popup');
+    if (e.target!=popup[0]&&popup.has(e.target).length === 0){
+        $('.js-overlay').fadeOut();
+    }
+});
+
+
+
+
+
