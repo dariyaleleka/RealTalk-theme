@@ -7,9 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="assets/img/favicon.png" type="image/png" />
-  <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
+  <!--&lt;!&ndash;[if lt IE 9]>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>-->
+  <!--<![endif]&ndash;&gt;-->
   <link rel="stylesheet" type="text/css" href="assets/css/main.min.css" />
 </head>
 <body>
@@ -259,7 +259,7 @@
         		<div class="about-info">
         				<div class="about-photo_item">
         						<div class="line">
-        								<div class="about-photo_item-person artur"></div>
+        								<div class="about-photo_item-person yana"></div>
         								<div class="about-photo_item-person denis">
         								</div>
         								<div class="about-photo_item-person dariya"></div>
@@ -267,7 +267,7 @@
         						<div class="line">
         								<div class="about-photo_item-person bilbo"></div>
         								<div class="about-photo_item-person andrey"></div>
-        								<div class="about-photo_item-person yana"></div>
+        								<div class="about-photo_item-person artur"></div>
         						</div>
         				</div>
         		</div>
@@ -286,7 +286,7 @@
         </div>
         <div class="col-12 col-lg-6 col-md-6 col-xs-12">
         		<div class="feedback-form">
-        				<!--form-->
+        				<?php echo do_shortcode( '[contact-form-7 id="12" title="Форма заявки на главной"]' ); ?>
         		</div>
         </div>
       </div>
@@ -324,6 +324,10 @@
                                          class="oun-width svg-inline--fa fa-telegram fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"></path></svg></a></li>
                   </ul>
                 </div>
+		          <div class="button-cta">
+				          <a id="button" href="">
+						          <span>Перезвоните мне</span> <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="phone" class="svg-inline--fa fa-phone fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"></path></svg></a>
+		          </div>
               </div>
           
           <div class="footer-content-policy">
@@ -335,6 +339,11 @@
       </div>
     </div>
   </section>
+<div id="popup-1" class="overlay js-overlay">
+		<div id="form" class="popup">
+				<?php echo do_shortcode('[contact-form-7 id="21" title="Форма из Popup"]' ); ?>
+		</div>
+</div>
 <div class="arrow animated" id="top"></div>
   <!-- .wrapper end -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
